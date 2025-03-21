@@ -44,7 +44,6 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="NoButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7sB-Zj-wGd"/>
                                             <action selector="noButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Slr-3O-ZWf"/>
                                         </connections>
                                     </button>
