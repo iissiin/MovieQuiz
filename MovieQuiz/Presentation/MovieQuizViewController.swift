@@ -11,6 +11,7 @@ final class MovieQuizViewController: UIViewController,  QuestionFactoryDelegate 
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     private var alertPresenter: AlertPresenter?
+    private var statisticService: StatisticServiceProtocol!
 
     
     private var currentQuestionIndex = 0
@@ -19,13 +20,13 @@ final class MovieQuizViewController: UIViewController,  QuestionFactoryDelegate 
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-                
         let questionFactory = QuestionFactory()
         questionFactory.delegate = self
         self.questionFactory = questionFactory
         
         alertPresenter = AlertPresenter(viewController: self)
-        
+        statisticService = StatisticService()
+
         questionFactory.requestNextQuestion()
     }
     
@@ -84,17 +85,32 @@ final class MovieQuizViewController: UIViewController,  QuestionFactoryDelegate 
     
     
     private func showNextQuestionOrResults() {
+        statisticService.store(correct: correctAnswers, total: questionsAmount)
+
         if currentQuestionIndex == questionsAmount - 1 {
-            let text = "Ваш результат: \(correctAnswers)/10"
-            let viewModel = QuizResultsViewModel(title: "Этот рауд окончен!", text: text, buttonText: "Сыграть ещё раз")
+            let bestGame = statisticService.bestGame
+            let gamesCount = statisticService.gamesCount
+            let accuracy = String(format: "%.2f", statisticService.totalAccuracy)
+            let dateString = bestGame.date.dateTimeString
+
+            let text = "Ваш результат: \(correctAnswers)/\(questionsAmount)\n" +
+                       "Количество игр: \(gamesCount)\n" +
+                       "Рекорд: \(bestGame.correct)/\(bestGame.total) (\(dateString))\n" +
+                       "Средняя точность: \(accuracy)%"
+
+            let viewModel = QuizResultsViewModel(
+                title: "Этот раунд окончен!",
+                text: text,
+                buttonText: "Сыграть ещё раз"
+            )
+
             result(quiz: viewModel)
         } else {
             currentQuestionIndex += 1
-            
             self.questionFactory?.requestNextQuestion()
-
         }
     }
+
     
     
     private func showAnswerResult(isCorrect: Bool) {
