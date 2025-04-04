@@ -93,6 +93,8 @@ final class MovieQuizViewController: UIViewController,  QuestionFactoryDelegate 
             let accuracy = String(format: "%.2f", statisticService.totalAccuracy)
             let dateString = bestGame.date.dateTimeString
 
+            statisticService.gamesCount += 1
+            
             let text = "Ваш результат: \(correctAnswers)/\(questionsAmount)\n" +
                        "Количество игр: \(gamesCount)\n" +
                        "Рекорд: \(bestGame.correct)/\(bestGame.total) (\(dateString))\n" +
