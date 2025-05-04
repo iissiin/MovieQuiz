@@ -61,10 +61,20 @@ class QuestionFactory: QuestionFactoryProtocol {
 
             let rating = Float(movie.rating) ?? 0
 
-            let randomNum = Float((3...9).randomElement()!)
+            let randomNum = Float((4...9).randomElement()!)
+            
+            let askIfGreater = Bool.random()
 
-            let text = "Рейтинг этого фильма больше чем \(Int(randomNum))?"
-            let correctAnswer = rating > randomNum
+            let text: String
+            let correctAnswer: Bool
+
+            if askIfGreater {
+                text = "Рейтинг этого фильма больше чем \(Int(randomNum))?"
+                correctAnswer = rating > randomNum
+            } else {
+                text = "Рейтинг этого фильма меньше чем \(Int(randomNum))?"
+                correctAnswer = rating < randomNum
+            }
 
             let question = QuizQuestion(image: imageData, text: text, correctAnswer: correctAnswer)
 
